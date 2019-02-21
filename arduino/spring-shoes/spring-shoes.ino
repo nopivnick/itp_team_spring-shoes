@@ -8,11 +8,11 @@ For more information see www.ladyada.net/learn/sensors/fsr.html */
 
 
 
-int fsrAnalogPin1 = 1; // FSR is connected to analog 0
-int fsrAnalogPin2 = 2; // FSR is connected to analog 0
+int fsrAnalogPinBall = 1; // FSR is connected to analog 0
+int fsrAnalogPinHeel = 2; // FSR is connected to analog 0
 // int LEDpin = 11;      // connect Red LED to pin 11 (PWM pin)
-int fsrReading1;       // the analog reading from the 1st FSR resistor divider
-int fsrReading2;       // the analog reading from the 2nd FSR resistor divider
+int fsrReadingBall;       // the analog reading from the 1st FSR resistor divider
+int fsrReadingHeel;       // the analog reading from the 2nd FSR resistor divider
 // int LEDbrightness;
  
 void setup(void) {
@@ -21,13 +21,13 @@ void setup(void) {
 }
  
 void loop(void) {
-  fsrReading1 = analogRead(fsrAnalogPin1);
-  fsrReading2 = analogRead(fsrAnalogPin2);
+  fsrReadingBall = analogRead(fsrAnalogPinBall);
+  fsrReadingHeel = analogRead(fsrAnalogPinHeel);
   Serial.print("FSR 1 reading = ");
-  Serial.print(fsrReading1);
+  Serial.print(fsrReadingBall);
   Serial.print(" | ");
   Serial.print("FSR 2 reading = ");
-  Serial.println(fsrReading2);
+  Serial.println(fsrReadingHeel);
  
   // we'll need to change the range from the analog reading (0-1023) down to the range
   // used by analogWrite (0-255) with map!
