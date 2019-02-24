@@ -65,6 +65,7 @@ void loop(void) {
       Serial.println(" *** BALL sensor ABOVE threshold *** ");
       Serial.println();
       digitalWrite(ledDigitalPinBall, HIGH);
+      // increment Ball of foot strike counter
       ballStrikeCount++;
       Serial.print(" * Ball strike count = ");
       Serial.print(ballStrikeCount);
@@ -73,7 +74,6 @@ void loop(void) {
   }
   // save button state for next comparison:
   lastBallState = ballState;
-  // increment Ball of foot strike counter
 
 
 
@@ -88,6 +88,7 @@ void loop(void) {
       Serial.println(" *** HEEL sensor ABOVE threshold *** ");
       Serial.println();
       digitalWrite(ledDigitalPinHeel, HIGH);
+      // increment Ball of foot strike counter
       heelStrikeCount++;
       Serial.print(" * Heel strike count = ");
       Serial.print(heelStrikeCount);
@@ -96,8 +97,8 @@ void loop(void) {
   }
   // save Ball state for next comparison:
   lastHeelState = heelState;
-  // increment Ball of foot strike counter
-  heelStrikeCount = heelStrikeCount++;
+
+
 
   //  // TODO: skip logic
   //  if there's 1 heel strike followed by two ball strikes
@@ -107,5 +108,5 @@ void loop(void) {
 
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
 
-  delay(100); // collecting analog data @ 10Hz (10/per sec)
+  delay(100); // reading sensor data @ 10Hz (10 readings/sec)
 }
