@@ -62,10 +62,11 @@ void loop(void) {
     if (lastBallState < ballThreshold) {
       // print to serial monitor when FSR sensor under Ball of foot passes the threshold
       Serial.println();
-      Serial.println(" + BALL sensor ABOVE threshold + ");
+      Serial.println(" *** BALL sensor ABOVE threshold *** ");
       Serial.println();
       digitalWrite(ledDigitalPinBall, HIGH);
       ballStrikeCount++;
+      Serial.print(" * Ball strike count = ");
       Serial.print(ballStrikeCount);
       Serial.println();
     }
@@ -84,10 +85,11 @@ void loop(void) {
     if (lastHeelState < heelThreshold) {
       // print to serial monitor when FSR sensor under Heel of foot passes the threshold
       Serial.println();
-      Serial.println(" + HEEL sensor ABOVE threshold + ");
+      Serial.println(" *** HEEL sensor ABOVE threshold *** ");
       Serial.println();
       digitalWrite(ledDigitalPinHeel, HIGH);
       heelStrikeCount++;
+      Serial.print(" * Heel strike count = ");
       Serial.print(heelStrikeCount);
       Serial.println();
     }
