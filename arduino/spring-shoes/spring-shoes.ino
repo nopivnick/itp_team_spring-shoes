@@ -4,14 +4,14 @@
   2189.00 Intro to Wearables (Jingwen Zhu)
 
   This sketch borrows code from the following examples:
-  
+
   - FSR simple testing sketch on AdaFruit's site
     https://learn.adafruit.com/force-sensitive-resistor-fsr/using-an-fsr
   - Analog Sensor Threshold Detection on ITP's Intro to Physical Computing Site
     https://itp.nyu.edu/physcomp/labs/labs-arduino-digital-and-analog/lab-sensor-change-detection/
 
   Wiring:
-  
+
   Connect one lead of the first FSR to power, the other lead to Analog pin 1.
   Connect one lead of the second FSR to power, the other lead to Analog pin 2.
   Connect one end of a 10K resistor from Analog pin 1 to ground
@@ -65,16 +65,20 @@ void loop(void) {
       Serial.println(" + BALL sensor ABOVE threshold + ");
       Serial.println();
       digitalWrite(ledDigitalPinBall, HIGH);
+      ballStrikeCount++;
+      Serial.print(ballStrikeCount);
+      Serial.println();
     }
   }
   // save button state for next comparison:
   lastBallState = ballState;
   // increment Ball of foot strike counter
-  ballStrikeCount = ballStrikeCount++;
-  
+
+
+
   // read FSR sensor under Heel of foot
-    int heelState = analogRead(fsrAnalogPinHeel);
-      // if FSR sensor under Heel of foot is *above* the threshold:
+  int heelState = analogRead(fsrAnalogPinHeel);
+  // if FSR sensor under Heel of foot is *above* the threshold:
   if (heelState >= heelThreshold) {
     // check that the previous value was below the threshold:
     if (lastHeelState < heelThreshold) {
@@ -83,6 +87,9 @@ void loop(void) {
       Serial.println(" + HEEL sensor ABOVE threshold + ");
       Serial.println();
       digitalWrite(ledDigitalPinHeel, HIGH);
+      heelStrikeCount++;
+      Serial.print(heelStrikeCount);
+      Serial.println();
     }
   }
   // save Ball state for next comparison:
@@ -90,13 +97,13 @@ void loop(void) {
   // increment Ball of foot strike counter
   heelStrikeCount = heelStrikeCount++;
 
-//  // TODO: skip logic
-//  if there's 1 heel strike followed by two ball strikes
-//  send 'SKIP' string over serial control to P5 sketch
-//  reset heel counter to 0
-//  reset ball counter to 0
+  //  // TODO: skip logic
+  //  if there's 1 heel strike followed by two ball strikes
+  //  send 'SKIP' string over serial control to P5 sketch
+  //  reset heel counter to 0
+  //  reset ball counter to 0
 
-// // TODO: increment the counter on each only after the threshold has risen *then* fallen
+  // // TODO: increment the counter on each only after the threshold has risen *then* fallen
 
   delay(100); // collecting analog data @ 10Hz (10/per sec)
 }
