@@ -36,8 +36,11 @@ int lastFsrReadingHeel;       // previous reading of FSR sensor under the ball o
 int ballThreshold = 925;      // threshold sensor value used to detect Ball strike
 int heelThreshold = 700;      // threshold sensor value used to detect Heel strike
 
-int ballStrikeCount = 0;
-int heelStrikeCount = 0;
+int ballCount = 0;            // temporary Ball strike counter for detecting skips
+int heelCount = 0;            // temporary Heel strike counter for detecting skips
+
+int totalBallCount = 0;       // cumulative Ball strike counter
+int totalHeelCount = 0;       // cumulative Heel strike counter
 
 void setup(void) {
   Serial.begin(9600);         // send debugging information to Serial Monitor
@@ -67,9 +70,13 @@ void loop(void) {
       Serial.println();
       digitalWrite(ledDigitalPinBall, HIGH);
       // increment Ball of foot strike counter
-      ballStrikeCount++;
-      Serial.print(" * Ball strike count = ");
-      Serial.print(ballStrikeCount);
+      ballCount++;
+      Serial.print(" * temp BALL count = ");
+      Serial.print(ballCount);
+      Serial.println();
+      totalBallCount++;
+      Serial.print(" * total BALL count = ");
+      Serial.print(totalBallCount);
       Serial.println();
     }
   }
@@ -90,9 +97,13 @@ void loop(void) {
       Serial.println();
       digitalWrite(ledDigitalPinHeel, HIGH);
       // increment Ball of foot strike counter
-      heelStrikeCount++;
-      Serial.print(" * Heel strike count = ");
-      Serial.print(heelStrikeCount);
+      heelCount++;
+      Serial.print(" * temp HEEL count = ");
+      Serial.print(heelCount);
+      Serial.println();
+      totalHeelCount++;
+      Serial.print(" * total HEEL count = ");
+      Serial.print(totalHeelCount);
       Serial.println();
     }
   }
@@ -100,16 +111,15 @@ void loop(void) {
   lastFsrReadingHeel = fsrReadingHeel;
 
 
-  // // TODO: Skip logic
+  // // TODO: Skip logic w/ states
   // // declare int skipState and set it to FALSE
   // // declare skipStateBall and set it to FALSE
   // // declare skipStateHeel and set it to FALSE
-  // // if heelStrikeCount = one then skipStateBall = TRUE
-  // // ballStrikeCount can only be iterated if skipStateHeel = TRUE
+  // // if heelCount = one then skipStateBall = TRUE
+  // // ballCount can only be iterated if skipStateHeel = TRUE
   // // if *both* skipStateHeel && skipStateBall are TRUE then skipState is true
   // // send "Skip" string over P5 serial control to P5 sketch
-  // // if heelStrikeCount is greater than 1, reset heelStrikeCount to 0
-  // // if ballStrikeCount is greater than 2, reset ballStrikeCount to 0
+
 
 
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
