@@ -99,12 +99,15 @@ void loop(void) {
   lastHeelState = heelState;
 
 
+  // // TODO: Skip logic
+  // redState = true if redCounter = one
+  // blueCounter can only be iterated if redState = true
+  // skipState = true if redState && blueState == true
+  // send "Skip" string over serial control to P5 sketch
+  // // at bottom of loop
+  // if redCounter becomes greater than one, reset redCounter to zero
+  // if blueCounter becomes greater than two, reset blueCounter to zero
 
-  //  // TODO: skip logic
-  //  if there's 1 heel strike followed by two ball strikes
-  //  send 'SKIP' string over serial control to P5 sketch
-  //  reset heel counter to 0
-  //  reset ball counter to 0
 
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
 
