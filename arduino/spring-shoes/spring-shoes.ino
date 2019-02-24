@@ -101,13 +101,15 @@ void loop(void) {
 
 
   // // TODO: Skip logic
-  // redState = true if redCounter = one
-  // blueCounter can only be iterated if redState = true
-  // skipState = true if redState && blueState == true
-  // send "Skip" string over serial control to P5 sketch
-  // // at bottom of loop
-  // if redCounter becomes greater than one, reset redCounter to zero
-  // if blueCounter becomes greater than two, reset blueCounter to zero
+  // // declare int skipState and set it to FALSE
+  // // declare skipStateBall and set it to FALSE
+  // // declare skipStateHeel and set it to FALSE
+  // // if heelStrikeCount = one then skipStateBall = TRUE
+  // // ballStrikeCount can only be iterated if skipStateHeel = TRUE
+  // // if *both* skipStateHeel && skipStateBall are TRUE then skipState is true
+  // // send "Skip" string over P5 serial control to P5 sketch
+  // // if heelStrikeCount is greater than 1, reset heelStrikeCount to 0
+  // // if ballStrikeCount is greater than 2, reset ballStrikeCount to 0
 
 
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
