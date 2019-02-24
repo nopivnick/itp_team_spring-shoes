@@ -111,6 +111,17 @@ void loop(void) {
   lastFsrReadingHeel = fsrReadingHeel;
 
 
+  // // TODO: Skip logic w/o states
+  // // if heelCount is greater than 1
+  // // reset heelCount to 1
+  // // reset ballCount to 0
+  //
+  // // if heelCount is 1 and ballCount is 2
+  // // send "Skip" string over P5 serial control to P5 sketch and ...
+  // // reset heelCount to 0
+  // // reset ballCount to 0
+
+
   // // TODO: Skip logic w/ states
   // // declare int skipState and set it to FALSE
   // // declare skipStateBall and set it to FALSE
@@ -119,7 +130,6 @@ void loop(void) {
   // // ballCount can only be iterated if skipStateHeel = TRUE
   // // if *both* skipStateHeel && skipStateBall are TRUE then skipState is true
   // // send "Skip" string over P5 serial control to P5 sketch
-
 
 
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
