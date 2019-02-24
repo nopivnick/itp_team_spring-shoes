@@ -30,8 +30,8 @@ int ledDigitalPinHeel = 7;    // connect Red LED to pin 7
 int fsrReadingBall;           // the analog reading from the FSR sensor under the ball of the foot
 int fsrReadingHeel;           // the analog reading from the FSR sensor under the heel of the foot
 
-int lastBallState = LOW;      // previous state of FSR sensor under the ball of the foot
-int lastHeelState = LOW;      // previous state of FSR sensor under the ball of the foot
+int lastFsrReadingBall;       // previous reading of FSR sensor under the ball of the foot
+int lastFsrReadingHeel;       // previous reading of FSR sensor under the ball of the foot
 
 int ballThreshold = 925;      // threshold sensor value used to detect Ball strike
 int heelThreshold = 700;      // threshold sensor value used to detect Heel strike
@@ -40,12 +40,13 @@ int ballStrikeCount = 0;
 int heelStrikeCount = 0;
 
 void setup(void) {
-  Serial.begin(9600);          // send debugging information to Serial Monitor
+  Serial.begin(9600);         // send debugging information to Serial Monitor
   pinMode(ledDigitalPinBall, OUTPUT);
   pinMode(ledDigitalPinHeel, OUTPUT);
 }
 
 void loop(void) {
+  // send FSR readings to serial monitor for debugging
   fsrReadingBall = analogRead(fsrAnalogPinBall);
   fsrReadingHeel = analogRead(fsrAnalogPinHeel);
   Serial.print("BALL sensor = ");
@@ -55,11 +56,11 @@ void loop(void) {
   Serial.println(fsrReadingHeel);
 
   // read FSR sensor under Ball of foot
-  int ballState = analogRead(fsrAnalogPinBall);
+  fsrReadingBall = analogRead(fsrAnalogPinBall);
   // if FSR sensor under Ball of foot is *above* the threshold:
-  if (ballState >= ballThreshold) {
+  if (fsrReadingBall >= ballThreshold) {
     // check that the previous value was below the threshold:
-    if (lastBallState < ballThreshold) {
+    if (lastFsrReadingBall < ballThreshold) {
       // print to serial monitor when FSR sensor under Ball of foot passes the threshold
       Serial.println();
       Serial.println(" *** BALL sensor ABOVE threshold *** ");
@@ -72,17 +73,17 @@ void loop(void) {
       Serial.println();
     }
   }
-  // save button state for next comparison:
-  lastBallState = ballState;
+  // save the last sensor reading for next comparison:
+  lastFsrReadingBall = fsrReadingBall;
 
 
 
   // read FSR sensor under Heel of foot
-  int heelState = analogRead(fsrAnalogPinHeel);
+  fsrReadingHeel = analogRead(fsrAnalogPinHeel);
   // if FSR sensor under Heel of foot is *above* the threshold:
-  if (heelState >= heelThreshold) {
+  if (fsrReadingHeel >= heelThreshold) {
     // check that the previous value was below the threshold:
-    if (lastHeelState < heelThreshold) {
+    if (lastFsrReadingHeel < heelThreshold) {
       // print to serial monitor when FSR sensor under Heel of foot passes the threshold
       Serial.println();
       Serial.println(" *** HEEL sensor ABOVE threshold *** ");
@@ -95,8 +96,8 @@ void loop(void) {
       Serial.println();
     }
   }
-  // save Ball state for next comparison:
-  lastHeelState = heelState;
+  // save the last sensor reading for next comparison:
+  lastFsrReadingHeel = fsrReadingHeel;
 
 
   // // TODO: Skip logic
