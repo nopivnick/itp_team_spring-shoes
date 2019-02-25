@@ -11,6 +11,16 @@ function preload() {
 
 function setup() {
   createCanvas(200, 200);
+
+  // p5.serialcontrol stuff
+  serial = new p5.SerialPort("10.17.231.12"); // instantiate a new serial object
+  serial.on('list', printList); // list the available serial ports
+  serial.on('connected', serverConnected); // callback for connecting to the server
+  serial.on('open', portOpen); // callback for the port opening
+  serial.on('data', serialEvent); // callback for when new data arrives
+  serial.on('error', serialError); // callback for errors
+  serial.on('close', portClose); // callback for the port closing
+  serial.open(portName);
 }
 
 function draw() {
