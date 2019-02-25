@@ -34,13 +34,18 @@ function serialEvent() {
   // the Arduino should be sending ASCII over serial
   let serialStringIn = serial.readLine(); // declare a variable to store incoming serial data as a string
 
-  // listen for a skip detected on the shoe
-  if (serialStringIn == "SKIP detected!") {
-    print("SKIP detected!");
+  // listen for a threshold met under BALL of foot message from the Arduino
+  if (serialStringIn == " *** BALL sensor ABOVE threshold *** ") {
+    print("Ball");
+    // listen for a threshold met under HEEL of foot message from the Arduino
+  } else if (serialStringIn == " *** HEEL sensor ABOVE threshold *** ") {
+    print("Heel");
+    // listen for a skip detected on the shoe
+  } else if (serialStringIn == "SKIP detected!") {
+    print("Skip");
     song.play();
   }
 }
-
 
 // keyboard settings for troubleshooting the p5 sketch w/o serial input from the Arduino
 
