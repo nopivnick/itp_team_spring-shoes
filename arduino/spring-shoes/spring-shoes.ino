@@ -52,11 +52,11 @@ void loop(void) {
   // send FSR readings to serial monitor for debugging
   fsrReadingBall = analogRead(fsrAnalogPinBall);
   fsrReadingHeel = analogRead(fsrAnalogPinHeel);
-  Serial.print("BALL sensor = ");
-  Serial.print(fsrReadingBall);
-  Serial.print(" - ");
-  Serial.print("HEEL sensor = ");
-  Serial.println(fsrReadingHeel);
+//  Serial.print("BALL sensor = ");
+//  Serial.print(fsrReadingBall);
+//  Serial.print(" - ");
+//  Serial.print("HEEL sensor = ");
+//  Serial.println(fsrReadingHeel);
 
   /*
      FSR sensor threshold stuff
