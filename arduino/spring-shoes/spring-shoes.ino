@@ -58,6 +58,10 @@ void loop(void) {
   Serial.print("HEEL sensor = ");
   Serial.println(fsrReadingHeel);
 
+  /*
+     FSR sensor threshold stuff
+  */
+
   // read FSR sensor under Ball of foot
   fsrReadingBall = analogRead(fsrAnalogPinBall);
   // if FSR sensor under Ball of foot is *above* the threshold:
@@ -82,8 +86,6 @@ void loop(void) {
   }
   // save the last sensor reading for next comparison:
   lastFsrReadingBall = fsrReadingBall;
-
-
 
   // read FSR sensor under Heel of foot
   fsrReadingHeel = analogRead(fsrAnalogPinHeel);
@@ -110,6 +112,9 @@ void loop(void) {
   // save the last sensor reading for next comparison:
   lastFsrReadingHeel = fsrReadingHeel;
 
+  /*
+    Skip detection stuff
+  */
 
   // ball & heel counter resets required to detect skips (w/o using states)
   // if heelCount is greater than 1
