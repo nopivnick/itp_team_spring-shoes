@@ -130,7 +130,7 @@ void loop(void) {
   if (heelCount == 1 && ballCount == 2) {
     // print "SKIP!" to serial monitor
     Serial.println();
-    Serial.print("SKIP detected!");
+    Serial.println("SKIP detected!");
     Serial.println();
     // send "Skip" string over P5 serial control to P5 sketch and ...
     // reset ballCount to 0
