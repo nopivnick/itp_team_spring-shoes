@@ -153,4 +153,6 @@ void loop(void) {
   // // TODO: increment the counter on each only after the threshold has risen *then* fallen
 
   delay(100); // reading sensor data @ 10Hz (10 readings/sec)
+  digitalWrite(ledDigitalPinBall, LOW);
+  digitalWrite(ledDigitalPinHeel, LOW);
 }
