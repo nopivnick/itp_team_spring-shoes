@@ -111,15 +111,28 @@ void loop(void) {
   lastFsrReadingHeel = fsrReadingHeel;
 
 
-  // // TODO: Skip logic w/o states
-  // // if heelCount is greater than 1
-  // // reset heelCount to 1
-  // // reset ballCount to 0
-  //
-  // // if heelCount is 1 and ballCount is 2
-  // // send "Skip" string over P5 serial control to P5 sketch and ...
-  // // reset heelCount to 0
-  // // reset ballCount to 0
+  // ball & heel counter resets required to detect skips (w/o using states)
+  // if heelCount is greater than 1
+  if (heelCount > 1) {
+    // reset ballCount to 0
+    ballCount = 0;
+    // reset heelCount to 1
+    heelCount = 1;
+  }
+
+  // skip detection logic (w/o using states)
+  // if heelCount is 1 and ballCount is 2
+  if (heelCount == 1 && ballCount == 2) {
+    // print "SKIP!" to serial monitor
+    Serial.println();
+    Serial.print("SKIP detected!");
+    Serial.println();
+    // send "Skip" string over P5 serial control to P5 sketch and ...
+    // reset ballCount to 0
+    ballCount = 0;
+    // reset heelCount to 0
+    heelCount = 0;
+  }
 
 
   // // TODO: Skip logic w/ states
