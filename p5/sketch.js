@@ -27,7 +27,6 @@ function draw() {
   background(255);
 }
 
-
 // serial data from the Arduino stuff
 
 function serialEvent() {
