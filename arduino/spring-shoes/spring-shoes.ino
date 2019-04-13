@@ -18,7 +18,7 @@
   Connect one lead of the second FSR to power, the other lead to Analog pin 2.
   Connect one end of a 10K resistor from Analog pin 1 to ground
   Connect one end of a 10K resistor from Analog pin 2 to ground
-  Connect blue LED from pin 6 through a 220 resistor to ground
+  Connect blue LED from pin 8 through a 220 resistor to ground
   Connect red LED from pin 7 through a 220 resistor to ground
 
 */
@@ -50,16 +50,68 @@ bool skipState = false;
 bool skipStateBall = false;
 bool skipStateHeel = false;
 
-// TODO: add an array for identifying skips vs stomps conditional logic
 const int ball = 1;        // assign a numerical value to an instance of ball FSR passing threshold
 const int heel = 0;        // assign a numerical value to an instance of ball FSR passing threshold
 int fsrPattern[3];         // declare an array to store patterns and initialize all elements to 1 (ball)
+
+// TODO: set pin for button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
+//const int skipStateButtonPin = 0;
+
+/*
+   Bluetooth LE stuff
+*/
+
+#include <ArduinoBLE.h>
+
+// create a service for
+BLEService shoeService("b6292c11-911a-4a51-b7f2-43fe53e62a77");
+
+// create a characteristic for sending skipState over BLE and allow remote device to read and write
+BLEBoolCharacteristic skipStateCharacteristic("b6292c11-911a-4a51-b7f2-43fe53e62a77", BLERead | BLENotify);
+
 
 void setup(void) {
   Serial.begin(9600);             // send debugging information to Serial Monitor
   pinMode(ledDigitalPinBall, OUTPUT);
   pinMode(ledDigitalPinHeel, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);  // onboard LED used to indicate a skip
+  // TODO: set pin for button to manually send skipState = true over serial and BLE for troubleshooting
+  //  pinMode(skipStateButtonPin, INPUT); // use button pin as an input
+
+  /*
+     Bluetooth LE stuff
+  */
+
+  // comment out the line below to begin BLE w/o having to open the serial monitor
+  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
+
+  // begin BLE initialization
+  if (!BLE.begin()) {
+    Serial.println("starting BLE failed!");
+
+    while (1);
+  }
+
+  // set the local name peripheral advertises
+  BLE.setLocalName("Spring Shoes");
+
+  // set the UUID for the service this peripheral advertises:
+  BLE.setAdvertisedService(shoeService);
+
+  // add characteristic9s) to the service
+  shoeService.addCharacteristic(skipStateCharacteristic);
+
+  // add the BLE service
+  BLE.addService(shoeService);
+
+  // set initial characteristic(s) value(s)
+  skipStateCharacteristic.writeValue(skipState);  // TODO: skipState is a boolean so let's use it
+
+  // start advertising BLE service
+  BLE.advertise();
+
+  Serial.println("Bluetooth device active, waiting for connections...");
+
 }
 
 void loop(void) {
@@ -209,10 +261,33 @@ void loop(void) {
   //void consoleStatus() {
   // print skip state to serial monitor
   Serial.println();
-  Serial.print("skip state: ");
+  Serial.print("skipState: ");
   Serial.println(skipState);
   // print fsrPattern elements to serial monitor
   Serial.print(fsrPattern[0]);
   Serial.print(fsrPattern[1]);
   Serial.print(fsrPattern[2]);
+  // TODO: print skipStateCharacteristic to serial monitor
+  //  Serial.println();
+  //  Serial.print("skipStateCharacteristic value: ");
+  //  Serial.print(skipStateCharacteristic);
+
+  /*
+    Bluetooth LE stuff
+  */
+
+  // poll for BLE events
+  BLE.poll();
+
+  //  // TODO: use button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
+  //    bool skipStateButtonValue = digitalRead(skipStateButtonPin);
+  //    if (skipStateButtonValue) {
+  //      digitalWrite(LED_BUILTIN, HIGH);
+  //    } else {
+  //      digitalWrite(LED_BUILTIN, LOW);
+  //    }
+  //    skipStateCharacteristic.writeValue(skipStateButtonValue);
+
+  skipStateCharacteristic.writeValue(skipState);
+
 }
