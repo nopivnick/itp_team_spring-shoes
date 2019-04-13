@@ -40,8 +40,8 @@ function serialEvent() {
   } else if (serialStringIn == " *** HEEL sensor ABOVE threshold *** ") {
     print("Heel");
     // listen for a skip detected on the shoe
-  } else if (serialStringIn == "SKIP detected!") {
-    print("Skip");
+  } else if (serialStringIn == "SKIP!") {
+    print("SKIP!");
     song.play();
   }
 }
