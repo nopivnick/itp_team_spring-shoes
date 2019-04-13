@@ -9,6 +9,8 @@
     https://learn.adafruit.com/force-sensitive-resistor-fsr/using-an-fsr
   - Analog Sensor Threshold Detection on ITP's Intro to Physical Computing Site
     https://itp.nyu.edu/physcomp/labs/labs-arduino-digital-and-analog/lab-sensor-change-detection/
+  - BLE start notification example on Jingwen Zhu's ITP Intro to Wearables github repo
+    https://github.com/ZhuJingwen/intro-to-wearables-2019/tree/1b629b750c70ed50bbc4415cd270ffeea3e7c945/Week%207%20Examples/Week7_Example_BLE_startNotification
 
   Wiring:
 
@@ -21,42 +23,50 @@
 
 */
 
-int fsrAnalogPinBall = 1;     // FSR is connected to analog pin 1
-int fsrAnalogPinHeel = 2;     // FSR is connected to analog pin 2
+const int fsrAnalogPinBall = 1;     // FSR is connected to analog pin 1
+const int fsrAnalogPinHeel = 2;     // FSR is connected to analog pin 2
 
-int ledDigitalPinBall = 6;    // connect Blue LED to pin 6
-int ledDigitalPinHeel = 7;    // connect Red LED to pin 7
+int ledDigitalPinBall = 8;          // connect Blue LED to pin 6
+int ledDigitalPinHeel = 7;          // connect Red LED to pin 7
 
-int fsrReadingBall;           // the analog reading from the FSR sensor under the ball of the foot
-int fsrReadingHeel;           // the analog reading from the FSR sensor under the heel of the foot
+int fsrReadingBall;                 // the analog reading from the FSR sensor under the ball of the foot
+int fsrReadingHeel;                 // the analog reading from the FSR sensor under the heel of the foot
 
-int lastFsrReadingBall;       // previous reading of FSR sensor under the ball of the foot
-int lastFsrReadingHeel;       // previous reading of FSR sensor under the ball of the foot
+int lastFsrReadingBall;             // previous reading of FSR sensor under the ball of the foot
+int lastFsrReadingHeel;             // previous reading of FSR sensor under the ball of the foot
 
-int ballThreshold = 925;      // threshold sensor value used to detect Ball strike
-int heelThreshold = 700;      // threshold sensor value used to detect Heel strike
+int ballThreshold = 925;            // threshold sensor value used to detect Ball strike
+int heelThreshold = 700;            // threshold sensor value used to detect Heel strike
 
-int ballCount = 0;            // temporary Ball strike counter for detecting skips
-int heelCount = 0;            // temporary Heel strike counter for detecting skips
+int ballCount = 0;                  // temporary Ball strike counter for detecting skips
+int heelCount = 0;                  // temporary Heel strike counter for detecting skips
 
-int totalBallCount = 0;       // cumulative Ball strike counter
-int totalHeelCount = 0;       // cumulative Heel strike counter
+int totalBallCount = 0;             // cumulative Ball strike counter
+int totalHeelCount = 0;             // cumulative Heel strike counter
+
+int totalSkipCount = 0;             // cumulative skip counter
+
+bool skipState = false;
+bool skipStateBall = false;
+bool skipStateHeel = false;
 
 void setup(void) {
-  Serial.begin(9600);         // send debugging information to Serial Monitor
+  Serial.begin(9600);             // send debugging information to Serial Monitor
   pinMode(ledDigitalPinBall, OUTPUT);
   pinMode(ledDigitalPinHeel, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);  // onboard LED used to indicate a skip
 }
 
 void loop(void) {
-  // send FSR readings to serial monitor for debugging
+  // read force-sensing resistor values
   fsrReadingBall = analogRead(fsrAnalogPinBall);
   fsrReadingHeel = analogRead(fsrAnalogPinHeel);
-//  Serial.print("BALL sensor = ");
-//  Serial.print(fsrReadingBall);
-//  Serial.print(" - ");
-//  Serial.print("HEEL sensor = ");
-//  Serial.println(fsrReadingHeel);
+  // send FSR readings to serial monitor for debugging
+  //  Serial.print("BALL sensor = ");
+  //  Serial.print(fsrReadingBall);
+  //  Serial.print(" - ");
+  //  Serial.print("HEEL sensor = ");
+  //  Serial.println(fsrReadingHeel);
 
   /*
      FSR sensor threshold stuff
@@ -72,6 +82,7 @@ void loop(void) {
       Serial.println();
       Serial.println(" *** BALL sensor ABOVE threshold *** ");
       Serial.println();
+      // turn on ball threshold LED indicator
       digitalWrite(ledDigitalPinBall, HIGH);
       // increment Ball of foot strike counter
       ballCount++;
@@ -97,6 +108,7 @@ void loop(void) {
       Serial.println();
       Serial.println(" *** HEEL sensor ABOVE threshold *** ");
       Serial.println();
+      // turn on heel threshold LED indicator
       digitalWrite(ledDigitalPinHeel, HIGH);
       // increment Ball of foot strike counter
       heelCount++;
@@ -116,7 +128,7 @@ void loop(void) {
     Skip detection stuff
   */
 
-  // ball & heel counter resets required to detect skips (w/o using states)
+  // ball & heel counter resets for detecting a skip pattern
   // if heelCount is greater than 1
   if (heelCount > 1) {
     // reset ballCount to 0
@@ -125,25 +137,32 @@ void loop(void) {
     heelCount = 1;
   }
 
-  // skip detection logic (w/o using states)
-  // if heelCount is 1 and ballCount is 2
-  if (heelCount == 1 && ballCount == 2) {
-    // print "SKIP!" to serial monitor
+  // skip detection logic
+  if (heelCount == 1 && ballCount == 2) {    // if heelCount is 1 and ballCount is 2
+    // print "SKIP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
     Serial.println();
-    Serial.println("SKIP detected!");
-    Serial.println();
-    // send "Skip" string over P5 serial control to P5 sketch and ...
+    Serial.println("SKIP!");
+    digitalWrite(LED_BUILTIN, HIGH);
+    skipState = true;
     // reset ballCount to 0
     ballCount = 0;
     // reset heelCount to 0
     heelCount = 0;
   }
 
+  // TODO:
+  // stomp detection logic
+  //if (heelCount == 3 && ballCount == 0) {  // if heelCount is 3
+  //    Serial.println();
+  //    Serial.println("STOMP!");
+  //    skipState = false;
+  //    // reset ballCount to 0
+  //    ballCount = 0;
+  //    // reset heelCount to 0
+  //    heelCount = 0;
+  //}
 
-  // // TODO: Skip logic w/ states
-  // // declare int skipState and set it to FALSE
-  // // declare skipStateBall and set it to FALSE
-  // // declare skipStateHeel and set it to FALSE
+  // // TODO: Skip detection logic (using states)
   // // if heelCount = one then skipStateBall = TRUE
   // // ballCount can only be iterated if skipStateHeel = TRUE
   // // if *both* skipStateHeel && skipStateBall are TRUE then skipState is true
@@ -155,4 +174,9 @@ void loop(void) {
   delay(100); // reading sensor data @ 10Hz (10 readings/sec)
   digitalWrite(ledDigitalPinBall, LOW);
   digitalWrite(ledDigitalPinHeel, LOW);
+  digitalWrite(LED_BUILTIN, LOW);
+  // print skip state to serial monitor
+  Serial.println();
+  Serial.print("skip state: ");
+  Serial.println(skipState);
 }
