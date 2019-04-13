@@ -5,7 +5,7 @@
   characteristic to represents the state of the button.
 
   The circuit:
-  - Arduino MKR WiFi 1010 or Arduino Uno WiFi Rev2 board
+  - Arduino MKR WiFi 1010
   - Button connected to pin 4
 
   This example code is in the public domain.
@@ -13,21 +13,25 @@
 
 #include <ArduinoBLE.h>
 
-const int buttonPin = 3; // set buttonPin to digital pin 4
+// TODO: set pin for button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
+//const int skipStateButtonPin = 0;
 
-BLEService buttonService("19B10010-E8F2-537E-4F6C-D104768A1214"); // create service
+// create a service for
+BLEService shoeService("b6292c11-911a-4a51-b7f2-43fe53e62a77");
 
-// create button characteristic and allow remote device to read and write
-BLEBoolCharacteristic buttonCharacteristic("19B10012-E8F2-537E-4F6C-D104768A1214", BLERead | BLENotify);
+// create a characteristic for sending skipState over BLE and allow remote device to read and write
+BLEBoolCharacteristic skipStateCharacteristic("b6292c11-911a-4a51-b7f2-43fe53e62a77", BLERead | BLENotify);
+
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial);
+  // comment out the line below to begin BLE w/o having to open the serial monitor
+  //  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(buttonPin, INPUT); // use button pin as an input
+  // set pin for button to manually send skipState = true over serial and BLE for troubleshooting
+  //  pinMode(skipStateButtonPin, INPUT); // use button pin as an input
 
-  // begin initialization
+  // begin BLE initialization
   if (!BLE.begin()) {
     Serial.println("starting BLE failed!");
 
@@ -35,21 +39,21 @@ void setup() {
   }
 
   // set the local name peripheral advertises
-  BLE.setLocalName("Button");
+  BLE.setLocalName("Spring Shoes");
 
   // set the UUID for the service this peripheral advertises:
-  BLE.setAdvertisedService(buttonService);
+  BLE.setAdvertisedService(shoeService);
 
-  // add the characteristics to the service
-  buttonService.addCharacteristic(buttonCharacteristic);
+  // add characteristic9s) to the service
+  shoeService.addCharacteristic(skipStateCharacteristic);
 
-  // add the service
-  BLE.addService(buttonService);
+  // add the BLE service
+  BLE.addService(shoeService);
 
-  //set init value
-  buttonCharacteristic.writeValue(0);
+  // set initial characteristic(s) value(s)
+  skipStateCharacteristic.writeValue(0);
 
-  // start advertising
+  // start advertising BLE service
   BLE.advertise();
 
   Serial.println("Bluetooth device active, waiting for connections...");
@@ -59,12 +63,13 @@ void loop() {
   // poll for BLE events
   BLE.poll();
 
-  bool buttonValue = digitalRead(buttonPin);
-  if (buttonValue) {
-    digitalWrite(LED_BUILTIN, HIGH);
-  }else{
-    digitalWrite(LED_BUILTIN, LOW);
-  }
-  buttonCharacteristic.writeValue(buttonValue);
+  //  // TODO: use button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
+  //    bool skipStateButtonValue = digitalRead(skipStateButtonPin);
+  //    if (skipStateButtonValue) {
+  //      digitalWrite(LED_BUILTIN, HIGH);
+  //    } else {
+  //      digitalWrite(LED_BUILTIN, LOW);
+  //    }
+  //    skipStateCharacteristic.writeValue(skipStateButtonValue);
 
 }
