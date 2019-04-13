@@ -50,6 +50,11 @@ bool skipState = false;
 bool skipStateBall = false;
 bool skipStateHeel = false;
 
+// TODO: add an array for identifying skips vs stomps conditional logic
+const int ball = 1;        // assign a numerical value to an instance of ball FSR passing threshold
+const int heel = 0;        // assign a numerical value to an instance of ball FSR passing threshold
+int fsrPattern[3];         // declare an array to store patterns and initialize all elements to 1 (ball)
+
 void setup(void) {
   Serial.begin(9600);             // send debugging information to Serial Monitor
   pinMode(ledDigitalPinBall, OUTPUT);
@@ -59,8 +64,8 @@ void setup(void) {
 
 void loop(void) {
   // read force-sensing resistor values
-  fsrReadingBall = analogRead(fsrAnalogPinBall);
-  fsrReadingHeel = analogRead(fsrAnalogPinHeel);
+  // fsrReadingBall = analogRead(fsrAnalogPinBall);
+  // fsrReadingHeel = analogRead(fsrAnalogPinHeel);
   // send FSR readings to serial monitor for debugging
   //  Serial.print("BALL sensor = ");
   //  Serial.print(fsrReadingBall);
@@ -93,6 +98,10 @@ void loop(void) {
       Serial.print(" * total BALL count = ");
       Serial.print(totalBallCount);
       Serial.println();
+      // shift existing elements in fsrPattern over one and add ball strike to the first index
+      fsrPattern[2] = fsrPattern[1];
+      fsrPattern[1] = fsrPattern[0];
+      fsrPattern[0] = ball;
     }
   }
   // save the last sensor reading for next comparison:
@@ -119,6 +128,10 @@ void loop(void) {
       Serial.print(" * total HEEL count = ");
       Serial.print(totalHeelCount);
       Serial.println();
+      // shift existing elements in fsrPattern over one and add heel strike to the first index
+      fsrPattern[2] = fsrPattern[1];
+      fsrPattern[1] = fsrPattern[0];
+      fsrPattern[0] = heel;
     }
   }
   // save the last sensor reading for next comparison:
@@ -137,8 +150,8 @@ void loop(void) {
     heelCount = 1;
   }
 
-  // skip detection logic
-  if (heelCount == 1 && ballCount == 2) {    // if heelCount is 1 and ballCount is 2
+  // skip detection logic using fsrPattern array
+  if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 0) {  // if fsrPattern is a skip
     // print "SKIP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
     Serial.println();
     Serial.println("SKIP!");
@@ -150,17 +163,33 @@ void loop(void) {
     heelCount = 0;
   }
 
-  // TODO:
-  // stomp detection logic
-  //if (heelCount == 3 && ballCount == 0) {  // if heelCount is 3
+  /*
+    Stomp detection stuff
+  */
+
+  // stomp detection logic using fsrPattern array
+  if (fsrPattern[0] == 0 && fsrPattern[1] == 0 && fsrPattern[2] == 0) {  // if fsrPattern is a skip
+    // print "STOMP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
+    Serial.println();
+    Serial.println("STOMP!");
+    digitalWrite(LED_BUILTIN, LOW);
+    skipState = false;
+    // reset ballCount to 0
+    ballCount = 0;
+    // reset heelCount to 0
+    heelCount = 0;
+  }
+
+  //  // skip detection logic w/o using fsrPattern array
+  //  if (heelCount == 1 && ballCount == 2) {    // if heelCount is 1 and ballCount is 2
   //    Serial.println();
-  //    Serial.println("STOMP!");
-  //    skipState = false;
+  //    Serial.println("SKIP!");
+  //    skipState = true;
   //    // reset ballCount to 0
   //    ballCount = 0;
   //    // reset heelCount to 0
   //    heelCount = 0;
-  //}
+  //  }
 
   // // TODO: Skip detection logic (using states)
   // // if heelCount = one then skipStateBall = TRUE
@@ -175,8 +204,15 @@ void loop(void) {
   digitalWrite(ledDigitalPinBall, LOW);
   digitalWrite(ledDigitalPinHeel, LOW);
   digitalWrite(LED_BUILTIN, LOW);
+  //}
+  // TODO turn consol logging into a function
+  //void consoleStatus() {
   // print skip state to serial monitor
   Serial.println();
   Serial.print("skip state: ");
   Serial.println(skipState);
+  // print fsrPattern elements to serial monitor
+  Serial.print(fsrPattern[0]);
+  Serial.print(fsrPattern[1]);
+  Serial.print(fsrPattern[2]);
 }
