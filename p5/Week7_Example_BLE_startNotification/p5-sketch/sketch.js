@@ -4,14 +4,14 @@
 // https://opensource.org/licenses/MIT
 
 // The serviceUuid must match the serviceUuid of the device you would like to connect
-const serviceUuid = "19b10010-e8f2-537e-4f6c-d104768a1214";
-let myCharacteristic;
-let myValue = 0;
-let myBLE;
+const serviceUuid = "b6292c11-911a-4a51-b7f2-43fe53e62a77";
+let skipStateCharacteristic;
+let skipState = 0;
+let shoeBLE;
 
 function setup() {
   // Create a p5ble class
-  myBLE = new p5ble();
+  shoeBLE = new p5ble();
 
   createCanvas(200, 200);
   textSize(20);
@@ -28,36 +28,36 @@ function setup() {
 
 function connectAndStartNotify() {
   // Connect to a device by passing the service UUID
-  myBLE.connect(serviceUuid, gotCharacteristics);
+  shoeBLE.connect(serviceUuid, gotCharacteristics);
 }
 
 // A function that will be called once got characteristics
 function gotCharacteristics(error, characteristics) {
   if (error) console.log('error: ', error);
   console.log('characteristics: ', characteristics);
-  myCharacteristic = characteristics[0];
-  console.log(myCharacteristic);
+  skipStateCharacteristic = characteristics[0];
+  console.log(skipStateCharacteristic);
   // Start notifications on the first characteristic by passing the characteristic
   // And a callback function to handle notifications
-  myBLE.startNotifications(myCharacteristic, handleNotifications);
+  shoeBLE.startNotifications(skipStateCharacteristic, handleNotifications);
   // You can also pass in the dataType
   // Options: 'unit8', 'uint16', 'uint32', 'int8', 'int16', 'int32', 'float32', 'float64', 'string'
-  // myBLE.startNotifications(myCharacteristic, handleNotifications, 'string');
+  // shoeBLE.startNotifications(skipStateCharacteristic, handleNotifications, 'string');
 }
 
 // A function that will be called once got characteristics
 function handleNotifications(data) {
   console.log('data: ', data);
-  myValue = data;
+  skipState = data;
 }
 
 // A function to stop notifications
 function stopNotifications() {
-  myBLE.stopNotifications(myCharacteristic);
+  shoeBLE.stopNotifications(skipStateCharacteristic);
 }
 
 function draw() {
   background(250);
   // Write value on the canvas
-  text(myValue, 100, 100);
+  text(skipState, 100, 100);
 }
