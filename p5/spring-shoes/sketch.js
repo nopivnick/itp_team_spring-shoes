@@ -11,7 +11,7 @@
 */
 
 let skipSong;
-let val
+let playSong = false;
 
 /*
    Bluetooth LE stuff
@@ -103,6 +103,23 @@ function draw() {
   background(250);
   // Write value on the canvas
   text(skipState, 100, 100);
+
+
+  if (skipState == 1) {
+    playSong = true;
+
+  } else if (skipState == 0) {
+    playSong = false;
+  }
+
+  if (playSong === true && !skipSong.isPlaying()) {
+    skipSong.play();
+    print("skipSong started");
+
+  } else if (playSong === false && skipSong.isPlaying()) {
+    skipSong.stop();
+    print("skipSong stopped");
+  }
 }
 
 // serial data from the Arduino stuff
