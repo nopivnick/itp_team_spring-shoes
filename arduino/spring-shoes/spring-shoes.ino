@@ -83,7 +83,7 @@ void setup(void) {
   */
 
   // comment out the line below to begin BLE w/o having to open the serial monitor
-  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
+//  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
 
   // begin BLE initialization
   if (!BLE.begin()) {
