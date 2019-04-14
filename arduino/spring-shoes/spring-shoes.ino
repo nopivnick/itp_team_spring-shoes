@@ -50,8 +50,9 @@ bool skipState = false;
 bool skipStateBall = false;
 bool skipStateHeel = false;
 
+const int heel = 0;        // assign a numerical value to an instance of heel FSR passing threshold
 const int ball = 1;        // assign a numerical value to an instance of ball FSR passing threshold
-const int heel = 0;        // assign a numerical value to an instance of ball FSR passing threshold
+const int wash = 2;        // assign a nemerical value to wash the fsrPattern array after a skip
 int fsrPattern[3];         // declare an array to store patterns and initialize all elements to 1 (ball)
 
 // TODO: set pin for button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
@@ -213,6 +214,10 @@ void loop(void) {
     ballCount = 0;
     // reset heelCount to 0
     heelCount = 0;
+      // reset the fsrPattern array
+      fsrPattern[0] = wash;
+      fsrPattern[1] = wash;
+      fsrPattern[2] = wash;
   }
 
   /*
@@ -220,7 +225,7 @@ void loop(void) {
   */
 
   // stomp detection logic using fsrPattern array
-  if (fsrPattern[0] == 0 && fsrPattern[1] == 0 && fsrPattern[2] == 0) {  // if fsrPattern is a skip
+  if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 1) {  // if fsrPattern is a skip
     // print "STOMP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
     Serial.println();
     Serial.println("STOMP!");
