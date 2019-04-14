@@ -23,37 +23,37 @@
 
 */
 
-const int fsrAnalogPinBall = 1;     // FSR is connected to analog pin 1
-const int fsrAnalogPinHeel = 2;     // FSR is connected to analog pin 2
+const int fsrAnalogPinBall = 1;  // FSR is connected to analog pin 1
+const int fsrAnalogPinHeel = 2;  // FSR is connected to analog pin 2
 
-int ledDigitalPinBall = 8;          // connect Blue LED to pin 6
-int ledDigitalPinHeel = 7;          // connect Red LED to pin 7
+int ledDigitalPinBall = 8;       // connect Blue LED to pin 6
+int ledDigitalPinHeel = 7;       // connect Red LED to pin 7
 
-int fsrReadingBall;                 // the analog reading from the FSR sensor under the ball of the foot
-int fsrReadingHeel;                 // the analog reading from the FSR sensor under the heel of the foot
+int fsrReadingBall;              // the analog reading from the FSR sensor under the ball of the foot
+int fsrReadingHeel;              // the analog reading from the FSR sensor under the heel of the foot
 
-int lastFsrReadingBall;             // previous reading of FSR sensor under the ball of the foot
-int lastFsrReadingHeel;             // previous reading of FSR sensor under the ball of the foot
+int lastFsrReadingBall;          // previous reading of FSR sensor under the ball of the foot
+int lastFsrReadingHeel;          // previous reading of FSR sensor under the ball of the foot
 
-int ballThreshold = 925;            // threshold sensor value used to detect Ball strike
-int heelThreshold = 700;            // threshold sensor value used to detect Heel strike
+int ballThreshold = 925;         // threshold sensor value used to detect Ball strike
+int heelThreshold = 700;         // threshold sensor value used to detect Heel strike
 
-int ballCount = 0;                  // temporary Ball strike counter for detecting skips
-int heelCount = 0;                  // temporary Heel strike counter for detecting skips
+int ballCount = 0;               // temporary Ball strike counter for detecting skips
+int heelCount = 0;               // temporary Heel strike counter for detecting skips
 
-int totalBallCount = 0;             // cumulative Ball strike counter
-int totalHeelCount = 0;             // cumulative Heel strike counter
+int totalBallCount = 0;          // cumulative Ball strike counter
+int totalHeelCount = 0;          // cumulative Heel strike counter
 
-int totalSkipCount = 0;             // cumulative skip counter
+int totalSkipCount = 0;          // cumulative skip counter
 
 bool skipState = false;
 bool skipStateBall = false;
 bool skipStateHeel = false;
 
-const int heel = 0;        // assign a numerical value to an instance of heel FSR passing threshold
-const int ball = 1;        // assign a numerical value to an instance of ball FSR passing threshold
-const int wash = 2;        // assign a nemerical value to wash the fsrPattern array after a skip
-int fsrPattern[3];         // declare an array to store patterns and initialize all elements to 1 (ball)
+const int heel = 0;              // assign a numerical value to an instance of heel FSR passing threshold
+const int ball = 1;              // assign a numerical value to an instance of ball FSR passing threshold
+const int wash = 2;              // assign a nemerical value to wash the fsrPattern array after a skip
+int fsrPattern[3];               // declare an array to store patterns and initialize all elements to 1 (ball)
 
 // TODO: set pin for button to manually send "SKIP!" over serial and skipState = true over BLE for troubleshooting
 //const int skipStateButtonPin = 0;
@@ -72,7 +72,7 @@ BLEBoolCharacteristic skipStateCharacteristic("b6292c11-911a-4a51-b7f2-43fe53e62
 
 
 void setup(void) {
-  Serial.begin(9600);             // send debugging information to Serial Monitor
+  Serial.begin(9600);  // send debugging information to Serial Monitor
   pinMode(ledDigitalPinBall, OUTPUT);
   pinMode(ledDigitalPinHeel, OUTPUT);
   pinMode(LED_BUILTIN, OUTPUT);  // onboard LED used to indicate a skip
@@ -84,7 +84,7 @@ void setup(void) {
   */
 
   // comment out the line below to begin BLE w/o having to open the serial monitor
-//  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
+  //  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
 
   // begin BLE initialization
   if (!BLE.begin()) {
@@ -157,6 +157,7 @@ void loop(void) {
       fsrPattern[0] = ball;
     }
   }
+
   // save the last sensor reading for next comparison:
   lastFsrReadingBall = fsrReadingBall;
 
@@ -187,6 +188,7 @@ void loop(void) {
       fsrPattern[0] = heel;
     }
   }
+
   // save the last sensor reading for next comparison:
   lastFsrReadingHeel = fsrReadingHeel;
 
@@ -194,7 +196,7 @@ void loop(void) {
     Skip detection stuff
   */
 
-  // ball & heel counter resets for detecting a skip pattern
+  // ball & heel counter resets for detecting a skip pattern w/o using the fsrPattern array
   // if heelCount is greater than 1
   if (heelCount > 1) {
     // reset ballCount to 0
@@ -214,10 +216,10 @@ void loop(void) {
     ballCount = 0;
     // reset heelCount to 0
     heelCount = 0;
-      // reset the fsrPattern array
-      fsrPattern[0] = wash;
-      fsrPattern[1] = wash;
-      fsrPattern[2] = wash;
+    // reset the fsrPattern array
+    fsrPattern[0] = wash;
+    fsrPattern[1] = wash;
+    fsrPattern[2] = wash;
   }
 
   /*
@@ -262,7 +264,7 @@ void loop(void) {
   digitalWrite(ledDigitalPinHeel, LOW);
   digitalWrite(LED_BUILTIN, LOW);
   //}
-  // TODO turn consol logging into a function
+  // TODO: turn console logging into a function
   //void consoleStatus() {
   // print skip state to serial monitor
   Serial.println();
