@@ -83,7 +83,7 @@ void setup(void) {
   */
 
   // comment out the line below to begin BLE w/o having to open the serial monitor
-  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
+//  while (!Serial);  // stops the code from running beyond this point w/o serial monitor (for debugging)
 
   // begin BLE initialization
   if (!BLE.begin()) {
@@ -220,7 +220,7 @@ void loop(void) {
   */
 
   // stomp detection logic using fsrPattern array
-  if (fsrPattern[0] == 0 && fsrPattern[1] == 0 && fsrPattern[2] == 0) {  // if fsrPattern is a skip
+  if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 1) {  // if fsrPattern is a skip
     // print "STOMP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
     Serial.println();
     Serial.println("STOMP!");
