@@ -1,18 +1,24 @@
-// p5.serialcontrol stuff
+/*
+   p5.serialcontrol stuff
+*/
+
 let serial; // declare a global variable for serial class
 let portName = '/dev/cu.usbmodem1411';
 
-let song;
+let skipSong;
 let val
 
 function preload() {
-  song = loadSound('assets/happy.mp3');
+  skipSong = loadSound('assets/skipSong.mp3');
 }
 
 function setup() {
   createCanvas(200, 200);
 
-  // p5.serialcontrol stuff
+  /*
+     p5.serialcontrol stuff
+  */
+
   serial = new p5.SerialPort("10.17.231.12"); // instantiate a new serial object
   serial.on('list', printList); // list the available serial ports
   serial.on('connected', serverConnected); // callback for connecting to the server
@@ -42,7 +48,7 @@ function serialEvent() {
     // listen for a skip detected on the shoe
   } else if (serialStringIn == "SKIP!") {
     print("SKIP!");
-    song.play();
+    skipSong.play();
   }
 }
 
@@ -50,9 +56,11 @@ function serialEvent() {
 
 function keyTyped() {
   if (key === 'a') {
-    song.play();
+    skipSong.play();
+    print("skipSong started");
   } else if (key === 'b') {
-    song.stop();
+    skipSong.stop();
+    print("skipSong stopped");
   }
 }
 
