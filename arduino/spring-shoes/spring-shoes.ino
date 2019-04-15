@@ -144,17 +144,26 @@ void loop(void) {
       digitalWrite(ledDigitalPinBall, HIGH);
       // increment Ball of foot strike counter
       ballCount++;
-      Serial.print(" * temp BALL count = ");
+      Serial.print("ballCount = ");
       Serial.print(ballCount);
       Serial.println();
       totalBallCount++;
-      Serial.print(" * total BALL count = ");
+      Serial.print("totalBallCount = ");
       Serial.print(totalBallCount);
       Serial.println();
       // shift existing elements in fsrPattern over one and add ball strike to the first index
       fsrPattern[2] = fsrPattern[1];
       fsrPattern[1] = fsrPattern[0];
       fsrPattern[0] = ball;
+      // print fsrPattern elements to serial monitor
+      Serial.print("fsrPattern = ");
+      Serial.print(fsrPattern[0]);
+      Serial.print(fsrPattern[1]);
+      Serial.print(fsrPattern[2]);
+      Serial.println();
+      // print skip state to serial monitor
+      Serial.print("skipState = ");
+      Serial.println(skipState);
     }
   }
 
@@ -175,17 +184,26 @@ void loop(void) {
       digitalWrite(ledDigitalPinHeel, HIGH);
       // increment Ball of foot strike counter
       heelCount++;
-      Serial.print(" * temp HEEL count = ");
+      Serial.print("heelCount = ");
       Serial.print(heelCount);
       Serial.println();
       totalHeelCount++;
-      Serial.print(" * total HEEL count = ");
+      Serial.print("totalHeelCount = ");
       Serial.print(totalHeelCount);
       Serial.println();
       // shift existing elements in fsrPattern over one and add heel strike to the first index
       fsrPattern[2] = fsrPattern[1];
       fsrPattern[1] = fsrPattern[0];
       fsrPattern[0] = heel;
+      // print fsrPattern elements to serial monitor
+      Serial.print("fsrPattern = ");
+      Serial.print(fsrPattern[0]);
+      Serial.print(fsrPattern[1]);
+      Serial.print(fsrPattern[2]);
+      Serial.println();
+      // print skip state to serial monitor
+      Serial.print("skipState = ");
+      Serial.println(skipState);
     }
   }
 
@@ -207,7 +225,7 @@ void loop(void) {
 
   // skip detection logic using fsrPattern array
   if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 0) {  // if fsrPattern is a skip
-    // print "SKIP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
+    // print "SKIP!" to serial monitor (string used for p5 sketch over p5.serialcontrol)
     Serial.println();
     Serial.println("SKIP!");
     digitalWrite(LED_BUILTIN, HIGH);
@@ -227,8 +245,8 @@ void loop(void) {
   */
 
   // stomp detection logic using fsrPattern array
-  if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 1) {  // if fsrPattern is a skip
-    // print "STOMP!" to serial monitor (used for p5 sketch over p5.serialcontrol)
+  if (fsrPattern[0] == 1 && fsrPattern[1] == 1 && fsrPattern[2] == 1) {  // if fsrPattern is a stomp
+    // print "STOMP!" to serial monitor (string used for p5 sketch over p5.serialcontrol)
     Serial.println();
     Serial.println("STOMP!");
     digitalWrite(LED_BUILTIN, LOW);
@@ -237,6 +255,10 @@ void loop(void) {
     ballCount = 0;
     // reset heelCount to 0
     heelCount = 0;
+    // reset the fsrPattern array
+    fsrPattern[0] = wash;
+    fsrPattern[1] = wash;
+    fsrPattern[2] = wash;
   }
 
   //  // skip detection logic w/o using fsrPattern array
@@ -266,14 +288,6 @@ void loop(void) {
   //}
   // TODO: turn console logging into a function
   //void consoleStatus() {
-  // print skip state to serial monitor
-  Serial.println();
-  Serial.print("skipState: ");
-  Serial.println(skipState);
-  // print fsrPattern elements to serial monitor
-  Serial.print(fsrPattern[0]);
-  Serial.print(fsrPattern[1]);
-  Serial.print(fsrPattern[2]);
   // TODO: print skipStateCharacteristic to serial monitor
   //  Serial.println();
   //  Serial.print("skipStateCharacteristic value: ");
